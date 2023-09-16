@@ -72,7 +72,7 @@ fun NewsHome()
 {
     val profileData = produceState(initialValue = DataOrException(loading = true))
     {
-        value = PeofileUpdateViewModelObj!!.GetNews(q = search, from = "2023-08-15", sortby = "publishedAt", apiKey = Utils.apikey)!!
+        value = PeofileUpdateViewModelObj!!.GetNews(q = search, from = "2023-08-16", sortby = "publishedAt", apiKey = Utils.apikey)!!
     }.value
 
     val context= LocalContext.current

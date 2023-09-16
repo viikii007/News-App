@@ -13,7 +13,7 @@ class Utils {
         const val username="username"
         const val usermail="usermail"
 
-        val apikey="77895d2c756249b491adfb4a8d93f821"
+        val apikey="fef4542c1c80438da766ec0e8b22a745"
 
         val sharedhelper = Sharedhelper()
 
