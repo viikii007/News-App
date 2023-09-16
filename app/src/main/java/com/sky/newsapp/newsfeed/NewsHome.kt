@@ -212,7 +212,7 @@ fun NewsFeedCard(
     {
         Column(modifier = Modifier.fillMaxWidth())
         {
-            NewsFeedImage(urlToImage)
+            NewsFeedImage(urlToImage?:"")
 
             Row(
                 modifier = Modifier.fillMaxWidth().padding(5.dp),

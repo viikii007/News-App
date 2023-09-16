@@ -296,7 +296,7 @@ fun SignUpPage(viewModel: LoginSignupViewModel)
 
               val userdata=  LoginObj!!.GetUser(email.value)
 
-                if(userdata[0].email==email.value)
+                if(userdata.isNotEmpty() && userdata[0].email==email.value)
                 {
                     Toast.makeText(context,"Existing Mail ID",Toast.LENGTH_SHORT).show()
                 }
