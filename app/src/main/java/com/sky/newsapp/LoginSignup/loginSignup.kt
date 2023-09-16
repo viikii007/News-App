@@ -79,8 +79,8 @@ fun LoginSignup(viewModel: LoginSignupViewModel= hiltViewModel())
         sheetContent = {
             when(viewModel.selected_item.value)
             {
-                1-> login(viewModel)
-                2 -> signup_page(viewModel)
+                1-> LoginPage(viewModel)
+                2 -> SignUpPage(viewModel)
             }
         },
         sheetShape = RoundedCornerShape(topStart = 10.dp, topEnd = 10.dp),
@@ -174,7 +174,7 @@ fun LoginSignUpButtons(clickable:()->Unit,title:String)
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun signup_page(viewModel: LoginSignupViewModel)
+fun SignUpPage(viewModel: LoginSignupViewModel)
 {
     val username = remember {
         mutableStateOf("")
@@ -213,7 +213,7 @@ fun signup_page(viewModel: LoginSignupViewModel)
         }
 
         // user name
-        CreditionalTextField(title ="User Name" ,
+        CreditionalTextField(title ="User Name*" ,
             textfielvalue = username ,
             placeholderText = "Enter User Name",
             keyboardOptions =KeyboardOptions.Default.copy(
@@ -233,7 +233,7 @@ fun signup_page(viewModel: LoginSignupViewModel)
         Spacer(modifier = Modifier.padding(7.dp))
 
         // email
-        CreditionalTextField(title ="Email",
+        CreditionalTextField(title ="Email*",
             textfielvalue = email ,
             placeholderText = "Enter Email",
             keyboardOptions =KeyboardOptions(
@@ -254,7 +254,7 @@ fun signup_page(viewModel: LoginSignupViewModel)
         // password
         Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.Start, modifier = Modifier.fillMaxWidth())
         {
-            Text(text = "Password", color = Color.Black, fontSize = 14.sp)
+            Text(text = "Password*", color = Color.Black, fontSize = 14.sp)
             Spacer(modifier = Modifier.padding(4.dp))
             PasswordTextField(text = password.value, onTextChanged = {  password.value = it }, placeholder = {
                 Text(
@@ -288,19 +288,32 @@ fun signup_page(viewModel: LoginSignupViewModel)
             else if (!isValidPassword(password.value.trim()))
             {
                 Toast
-                    .makeText(context, "Enter valid Password (password should contains at least 8 characters 1 special char, 1 upper case 1 numerical  " , Toast.LENGTH_LONG)
+                    .makeText(context, "Min 8 characters 1 special char, 1 upper case 1 numerical" , Toast.LENGTH_LONG)
                     .show()
             }
-            else {
+            else
+            {
 
-                 LoginObj!!.InsertUser(UserTable(id = 0, username = username.value, email = email.value, password = password.value))
+              val userdata=  LoginObj!!.GetUser(email.value)
 
-                 Toast.makeText(context,"Registration Successfully",Toast.LENGTH_SHORT).show()
-
-                    Utils.sharedhelper.putString(context,Utils.username,username.value)
-                    Utils.sharedhelper.putString(context,Utils.usermail,email.value)
-
-                 viewModel.onNavigatetoHome()
+                if(userdata[0].email==email.value)
+                {
+                    Toast.makeText(context,"Existing Mail ID",Toast.LENGTH_SHORT).show()
+                }
+                else {
+                    LoginObj!!.InsertUser(
+                        UserTable(
+                            id = 0,
+                            username = username.value,
+                            email = email.value,
+                            password = password.value
+                        )
+                    )
+                    Toast.makeText(context, "Registration Successfully", Toast.LENGTH_SHORT).show()
+                    Utils.sharedhelper.putString(context, Utils.username, username.value)
+                    Utils.sharedhelper.putString(context, Utils.usermail, email.value)
+                    viewModel.onNavigatetoHome()
+                }
             }
         },
             cardColor = if(isEnable) Color(0xFF1A81AD) else Color.LightGray,
@@ -337,7 +350,7 @@ fun CreateAccountButton(clickable: () -> Unit,cardColor:Color,textColor:Color)
 }
 
 @Composable
-fun login(viewModel: LoginSignupViewModel)
+fun LoginPage(viewModel: LoginSignupViewModel)
 {
 
     val focusManager = LocalFocusManager.current

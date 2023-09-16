@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.sky.Database.DbViewModel
 import com.sky.Database.UserDbViewModel
-import com.sky.Database.UserTable
 import com.sky.newsapp.detailScreen.NewsDetail
 import com.sky.newsapp.newsfeed.NewsBottomBar
 import com.sky.newsapp.newsfeed.NewsFeedCard
@@ -94,13 +93,11 @@ Scaffold(topBar = {
                             isBookamarked=false
                             reload.value=!reload.value
                     },
-                    isBookamarked = isBookamarked,
-                    iconColor = Color.Red,
-                    urlClicked = {
-                        webviewurl.value = articles.url ?: ""
-                        showDetails.value = true
-                    }
-                )
+                    iconColor = Color.Red
+                ) {
+                    webviewurl.value = articles.url ?: ""
+                    showDetails.value = true
+                }
             }
         }
     }

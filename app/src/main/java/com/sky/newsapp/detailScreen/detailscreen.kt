@@ -16,6 +16,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Card
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
@@ -44,21 +48,20 @@ fun NewsDetail(alertDialo: MutableState<Boolean>, webUrl:String) {
 
     AnimatedVisibility(visible = alertDialo.value)
     {
-        Box(modifier = Modifier
-            .fillMaxSize()
-            .background(Color.White))
+        Card(modifier = Modifier
+            .fillMaxSize(), backgroundColor = Color.White)
         {
             if(!network_status.value)
             {
                 Nointernetconnection()
             }
             else {
-                Column(modifier = Modifier.fillMaxSize())
+                Column(modifier = Modifier.fillMaxSize().padding(5.dp))
                 {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(7.dp),
+                            .padding(15.dp),
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.Top
                     )
@@ -66,7 +69,7 @@ fun NewsDetail(alertDialo: MutableState<Boolean>, webUrl:String) {
                         Image(
                             painter = painterResource(id = R.drawable.cancel),
                             contentDescription = "Cancel",
-                            modifier = Modifier.clickable(onClick = { alertDialo.value = false }),
+                            modifier = Modifier.clickable(onClick = { alertDialo.value = false }).size(30.dp),
                             colorFilter = ColorFilter.tint(Color.Black)
                         )
                     }

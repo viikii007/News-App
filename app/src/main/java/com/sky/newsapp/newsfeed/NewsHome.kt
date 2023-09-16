@@ -52,9 +52,7 @@ import coil.compose.SubcomposeAsyncImage
 import coil.compose.SubcomposeAsyncImageContent
 import com.sky.Database.NewsTable
 import com.sky.newsapp.Apiservice.DataOrException
-import com.sky.newsapp.Apiservice.ModelClass.Article
 import com.sky.newsapp.Apiservice.NewsViewModel
-import com.sky.newsapp.BookMarkScreen.LoginObj
 import com.sky.newsapp.BookMarkScreen.NoDataFound
 import com.sky.newsapp.BookMarkScreen.newsFeedObj
 import com.sky.newsapp.R
@@ -126,7 +124,8 @@ fun NewsHome()
                                 }
 
 
-                                NewsFeedCard(articles.title ?: "",
+                                NewsFeedCard(
+                                    articles.title ?: "",
                                     articles.content ?: "",
                                     articles.url ?: "",
                                     articles.urlToImage ?: "",
@@ -151,12 +150,11 @@ fun NewsHome()
                                             isBookamarked = true
                                         }
                                     },
-                                    isBookamarked,
-                                    iconColor = if (isBookamarked) Color.Red else Color.LightGray,
-                                    urlClicked = {
-                                        webviewurl.value = articles.url ?: ""
-                                        showDetails.value = true
-                                    })
+                                    iconColor = if (isBookamarked) Color.Red else Color.LightGray
+                                ) {
+                                    webviewurl.value = articles.url ?: ""
+                                    showDetails.value = true
+                                }
                             }
                         }
                     }
@@ -202,103 +200,113 @@ fun NewsFeedCard(
     urlToImage: String,
     publishedAt: String,
     bookmarkClicked: () -> Unit,
-    isBookamarked: Boolean,
-    iconColor:Color= Color.Black,
+    iconColor: Color = Color.Black,
     urlClicked: () -> Unit,
-)
-{
+) {
 
-
-    Card(modifier = Modifier.padding(10.dp),
+    Card(
+        modifier = Modifier.padding(10.dp),
         shape = RoundedCornerShape(10.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White))
+        colors = CardDefaults.cardColors(containerColor = Color.White)
+    )
     {
         Column(modifier = Modifier.fillMaxWidth())
         {
-            SubcomposeAsyncImage(
-                model =  urlToImage,
-                contentDescription = "", contentScale = ContentScale.FillBounds
-            ) {
-                val state = painter.state
-                if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                } else {
-                    SubcomposeAsyncImageContent(contentScale = ContentScale.FillBounds)
-
-                }
-            }
+            NewsFeedImage(urlToImage)
 
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(5.dp),
+                modifier = Modifier.fillMaxWidth().padding(5.dp),
                 verticalAlignment = Alignment.CenterVertically
             )
             {
                 Text(
-                    text =  title,
+                    text = title,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Left,
                     modifier = Modifier
-                        .weight(5f)
+                        .weight(4f)
                         .padding(4.dp)
                 )
 
-                Box(modifier = Modifier
-                    .weight(0.4f)
-                    .clickable(onClick = {
-                        bookmarkClicked()
-                    })
-                    .size(20.dp))
+                Box(
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .clickable(onClick = {
+                            bookmarkClicked()
+                        })
+                        .size(25.dp)
+                )
                 {
-                        Image(
-                            painter = painterResource(id = R.drawable.bookmark),
-                            contentDescription = "",
-                            contentScale = ContentScale.FillBounds, colorFilter = tint(
-                               iconColor
-                            )
+                    Image(
+                        painter = painterResource(id = R.drawable.bookmark),
+                        contentDescription = "",
+                        contentScale = ContentScale.FillBounds, colorFilter = tint(
+                            iconColor
                         )
-
-                    }
+                    )
 
                 }
+
             }
 
 
-            Spacer(modifier = Modifier
-                .height(5.dp)
-                .padding(10.dp))
             Text(
-                text =  publishedAt,
+                text = publishedAt,
                 fontSize = 10.sp,
                 textAlign = TextAlign.Left,
                 modifier = Modifier.padding(7.dp)
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
-                text =  content,
+                text = content,
                 textAlign = TextAlign.Justify,
                 color = Color.Black,
                 fontSize = 14.sp,
                 modifier = Modifier.padding(10.dp),
                 lineHeight = 15.sp
             )
-            Text(text =  url, color = Color.Blue, fontSize = 13.sp, lineHeight = 15.sp, modifier = Modifier
-                .padding(10.dp)
-                .clickable(onClick = {
-                    urlClicked()
-                }))
+            Text(text = url,
+                color = Color.Blue,
+                fontSize = 13.sp,
+                lineHeight = 15.sp,
+                modifier = Modifier
+                    .padding(10.dp)
+                    .clickable(onClick = {
+                        urlClicked()
+                    })
+            )
         }
     }
 
 
+}
+
+
+
+
+@Composable
+fun NewsFeedImage(urlToImage:String)
+{
+    SubcomposeAsyncImage(
+        model =  urlToImage,
+        contentDescription = "", contentScale = ContentScale.FillBounds
+    ) {
+        val state = painter.state
+        if (state is AsyncImagePainter.State.Loading || state is AsyncImagePainter.State.Error) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(modifier = Modifier.padding(7.dp))
+            }
+        } else {
+            SubcomposeAsyncImageContent(contentScale = ContentScale.FillBounds)
+
+        }
+    }
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -328,7 +336,7 @@ fun NewsTopbar(title: String,showSearch:Boolean,viewModel: NewsFeedViewModel= hi
                             }),
                     )
                     Text(
-                        text = name,
+                        text = "Hi $name",
                         fontSize = 15.sp,
                         color = Color.Black,
                         fontWeight = FontWeight.W700,
@@ -338,7 +346,7 @@ fun NewsTopbar(title: String,showSearch:Boolean,viewModel: NewsFeedViewModel= hi
                 }
             }
 
-            Text(text = title, fontSize = 20.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center,
+            Text(text = title, fontSize = 18.sp, fontWeight = FontWeight.ExtraBold, textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.Center))
 
             if(showSearch)
